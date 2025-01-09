@@ -1,0 +1,142 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{a4paper, margin=1in}
+\usepackage{float}
+
+\title{\textbf{Air Canada Database Management System Report}}
+\date{} % Suppress the date
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Air Canada handles a large volume of flight bookings daily, necessitating an efficient flight booking data management system. This report outlines the development of a centralized database to enhance operational efficiency, improve customer experiences, and support data-driven decision-making. Key features include flight scheduling, booking management, payment tracking, and customer data storage. The report also presents an Entity-Relationship Diagram (ERD), relational schema, and a description of major business rules and objectives.
+\end{abstract}
+
+\section*{Introduction}
+Air Canada operates a large number of flights daily, requiring efficient handling of flight bookings, check-ins, and flight schedules. This project focuses on building a database management system to improve operational efficiency, reduce redundancy, and provide better insights into customer data and airline operations. The system aims to streamline business processes, enhance customer satisfaction, and enable advanced analytics for decision-making.
+
+Key features of the system include:
+\begin{itemize}
+    \item Flight scheduling and management with real-time status updates.
+    \item Efficient booking management, ensuring optimal seat allocation and minimizing overbooking.
+    \item Secure payment processing and integration with the frequent flyer program.
+    \item Data-driven insights into revenue, customer loyalty, and travel patterns.
+\end{itemize}
+
+\section*{Mission Statement}
+The purpose of the Flight Booking Data Management System is to centralize and maintain data supporting Air Canada’s operations, including booking, revenue, flight management, and customer service. This database facilitates seamless information sharing across departments and supports data-driven decision-making.
+
+\subsection*{Mission Objectives}
+The objectives of this database system are:
+\begin{itemize}
+    \item Maintain and update data on flights, passengers, bookings, payments, aircraft, and flight statuses.
+    \item Enable efficient search and reporting functionalities for all key entities.
+    \item Track flight and booking statuses, frequent flyer points, and membership tiers.
+    \item Provide insights through comprehensive reporting on flights, bookings, payments, and customer behavior.
+\end{itemize}
+
+\section*{Scope of the Project}
+\subsection*{Goals}
+\begin{itemize}
+    \item Centralize all passenger, flight, booking, and payment data into a single database system to reduce redundancy and ensure consistency.
+    \item Streamline processes such as flight scheduling, passenger check-ins, and payment processing to enhance operational efficiency.
+    \item Improve the customer experience by providing personalized offers and real-time updates on flight statuses and schedules.
+    \item Enable advanced data-driven decision-making for resource allocation, route optimization, and customer loyalty analysis.
+\end{itemize}
+
+\subsection*{Users}
+\begin{itemize}
+    \item \textbf{Airline Staff}: Flight operators, pilots, cabin crew, and customer service representatives.
+    \item \textbf{Customers}: General passengers and Aeroplan members (frequent flyers).
+    \item \textbf{Business Analysts and Executives}: For planning and strategic decision-making.
+    \item \textbf{IT and Database Administrators}: Responsible for maintaining the system's integrity and security.
+\end{itemize}
+
+\subsection*{Major Business Rules}
+\begin{itemize}
+    \item \textbf{Flights}: Each flight must have a unique flight number and an assigned aircraft. Overlapping flight schedules for the same aircraft are not allowed.
+    \item \textbf{Payments}: All payments must comply with airline policies. Frequent flyer points can be redeemed for tickets.
+    \item \textbf{Bookings}: Each booking is unique, tied to a passenger and a payment, and confirmed only after successful payment.
+    \item \textbf{Check-ins}: Passengers must provide valid identification matching booking details.
+\end{itemize}
+
+\section*{Entity-Relationship Diagram (ERD)}
+The ERD for this database outlines the relationships between flights, passengers, bookings, payments, and other key entities. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{ERD.png}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\section*{Relational Schema}
+
+\noindent\textbf{AirportCode} (\texttt{airport\_code}, \texttt{airport\_name}, \texttt{city}, \texttt{country}) \\
+Primary key: (\texttt{airport\_code})
+
+\vspace{0.3cm}
+
+\noindent\textbf{Aircraft} (\texttt{aircraft\_tail\_number}, \texttt{aircraft\_type}, \texttt{total\_first\_class\_seats}, \\\texttt{total\_business\_class\_seats}, \texttt{total\_economy\_class\_seats}, \texttt{airline}) \\
+Primary key: (\texttt{aircraft\_tail\_number})
+
+\vspace{0.3cm}
+
+\noindent\textbf{FlightRoute} (\texttt{flight\_number}, \texttt{departure\_airport\_code}, \texttt{arrival\_airport\_code}) \\
+Primary key: (\texttt{flight\_number}) \\
+Foreign Key: (\texttt{departure\_airport\_code}) References \textbf{AirportCode} (\texttt{airport\_code}) \\
+Foreign Key: (\texttt{arrival\_airport\_code}) References \textbf{AirportCode} (\texttt{airport\_code})
+
+\vspace{0.3cm}
+
+\noindent\textbf{Payment} (\texttt{payment\_id}, \texttt{payment\_date}, \texttt{amount}, \texttt{payment\_method}, \texttt{payment\_status}, \texttt{points\_earned}) \\
+Primary key: (\texttt{payment\_id})
+
+\vspace{0.3cm}
+
+\noindent\textbf{Flight} (\texttt{flight\_id}, \texttt{flight\_number}, \texttt{scheduled\_departure\_time}, \texttt{scheduled\_arrival\_time}, \texttt{aircraft\_tail\_number}, \texttt{booking\_id}) \\
+Primary key: (\texttt{flight\_id}) \\
+Foreign Key: (\texttt{flight\_number}) References \textbf{FlightRoute} (\texttt{flight\_number}) \\
+Foreign Key: (\texttt{aircraft\_tail\_number}) References \textbf{Aircraft} (\texttt{aircraft\_tail\_number})
+
+\vspace{0.3cm}
+
+\noindent\textbf{Passenger} (\texttt{passenger\_id}, \texttt{name}, \texttt{email}, \texttt{phone}, \texttt{passport\_number}) \\
+Primary key: (\texttt{passenger\_id})
+
+\vspace{0.3cm}
+
+\noindent\textbf{Booking} (\texttt{booking\_id}, \texttt{booking\_date}, \texttt{booking\_class} \{`First', `Business', `Economy'\}, \texttt{booking\_status}, \texttt{passenger\_id}, \texttt{flight\_id}, \texttt{payment\_id}) \\
+Primary key: (\texttt{booking\_id}) \\
+Foreign Key: (\texttt{passenger\_id}) References \textbf{Passenger} (\texttt{passenger\_id}) \\
+Foreign Key: (\texttt{payment\_id}) References \textbf{Payment} (\texttt{payment\_id}) \\
+Foreign Key: (\texttt{flight\_id}) References \textbf{Flight} (\texttt{flight\_id})
+
+\vspace{0.3cm}
+
+\noindent\textbf{FlightStatus} (\texttt{status\_id}, \texttt{primary\_status} \{`Scheduled', `Boarding', `Departed', `In Air', `Landed', `Cancelled', `Diverted'\}, \texttt{secondary\_status} \{`On Time', `Delayed', `Gate Change', `None'\}, \texttt{updated\_departure\_time}, \texttt{updated\_arrival\_time}, \texttt{current\_departure\_gate}, \texttt{current\_arrival\_gate}, \texttt{update\_time}, \texttt{flight\_id}) \\
+Primary key: (\texttt{status\_id}) \\
+Foreign Key: (\texttt{flight\_id}) References \textbf{Flight} (\texttt{flight\_id})
+
+\vspace{0.3cm}
+
+\noindent\textbf{FrequentFlyer} (\texttt{ff\_id}, \texttt{passenger\_id}, \texttt{points\_balance}, \texttt{membership\_tier} \{`Silver', `Gold', `Platinum', `Diamond'\}) \\
+Primary key: (\texttt{ff\_id}) \\
+Foreign Key: (\texttt{passenger\_id}) References \textbf{Passenger} (\texttt{passenger\_id})
+
+\vspace{0.3cm}
+
+\noindent\textbf{CheckIn} (\texttt{checkin\_id}, \texttt{booking\_id}, \texttt{checkin\_time}, \texttt{boarding\_pass\_number}, \texttt{seat\_number}) \\
+Primary key: (\texttt{checkin\_id}) \\
+Foreign Key: (\texttt{booking\_id}) References \textbf{Booking} (\texttt{booking\_id})
+
+
+\section*{Conclusion}
+The Air Canada Database Management System addresses critical operational challenges, enhances customer experience, and supports advanced analytics for better decision-making. With a robust ERD and relational schema, this system lays a strong foundation for seamless operations and strategic growth.
+
+\end{document}
